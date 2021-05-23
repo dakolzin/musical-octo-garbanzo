@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="world" default="empty_world"/>
+  <arg name="init_pos_x" default="1.7"/>
+  <arg name="init_pos_y" default="0.0"/>
+  <arg name="init_pos_z" default="0.2"/>
+  <!-- By default, we are not in debug mode -->
+  <arg name="debug" default="false" />
+
+  <!-- startup simulated world -->
+  <include file="$(find youbot_gazebo_worlds)/launch/$(arg world).launch" />
+  <arg name="verbose" value="true" />
+
+  <!-- send robot urdf to param server -->
+  <param name="robot_description" command="$(find xacro)/xacro.py $(find youbot_description)/robots/youbot.urdf.xacro" />
+
+  <!-- push robot_description to factory and spawn robot in gazebo at the origin, change x,y,z arguments to spawn in a different position -->
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_robot" respawn="false" output="screen"
+    args="-param robot_description
+          -urdf
+          -x $(arg init_pos_x)
+          -y $(arg init_pos_y)
+          -z $(arg init_pos_z)
+          -model youbot">
+  </node>
+  <!-- launch joint state controller -->
+  <include file="$(find youbot_gazebo_control)/launch/joint_state_controller.launch" />
+
+  <!-- launch arm controller -->
+  <include file="$(find youbot_gazebo_control)/launch/arm_controller.launch" />
+  
+  <!-- launch gripper controller -->
+  <include file="$(find youbot_gazebo_control)/launch/gripper_controller.launch" />
+
+  <include file="$(find youbot_moveit)/launch/ros_controllers.launch"/>
+  
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="30.0" />
+  </node>
+  
+  <include file="$(find youbot_moveit)/launch/move_group.launch" />
+  <!-- Run Rviz and load the default config to see the state of the move_group node -->
+  <include file="$(find youbot_moveit)/launch/moveit_rviz.launch">
+    <arg name="config" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+</launch>
