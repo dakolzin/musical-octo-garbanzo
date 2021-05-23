@@ -1,0 +1,37 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='obj_1'>
+    <static>false</static>
+    <link name='link'>
+      <collision name='collision'>
+        <geometry>
+          <box>
+            <size>0.1 0.1 0.1</size>
+          </box>
+        </geometry>
+      </collision>
+
+      <visual name='visual'>
+        <geometry>
+          <mesh>
+            <uri>model://object1/mesh/obj1.dae</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+        <!--material> 
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.2 1</diffuse>
+          <specular>0 0 0 0</specular>
+          <emissive>0 0 0 1</emissive>
+        </material--> 
+        <material> 
+          <script>
+          <uri>model://object1/materials/scripts</uri>
+          <uri>model://object1/materials/textures</uri>
+          <name>object/can</name>
+          </script>
+        </material> 
+      </visual>
+    </link>
+  </model>
+</sdf>
