@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<root xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://ros.org/wiki/xacro">
+
+
+  <property name="camera_tower_down_height" value="0.02" />
+  <property name="camera_tower_r" value="0.094" />
+  
+  <xacro:macro name="camera_tower_down" params="name parent *origin">
+  	<link name="${name}_link">
+      <inertial>
+        <mass value="0.5" />
+        <origin xyz="0 0 ${(camera_tower_down_height/2) - camera_tower_down_height}" rpy="0 0 0"/>
+        <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001" />
+      </inertial>
+
+      <visual>
+        <origin xyz="0 0 ${camera_tower_down_height - (camera_tower_down_height/2)}" rpy="0 0 0" />
+        <geometry>
+           <cylinder length="0.02" radius="0.094" />
+        </geometry>
+        <material name="youBot/LightGrey" />
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 ${camera_tower_down_height - (camera_tower_down_height/2)}" rpy="0 0 0" />
+        <geometry>
+           <cylinder length="0.02" radius="0.094" />
+        </geometry>
+      </collision >
+    </link>
+    
+    <joint name="${name}_joint" type="fixed">
+      <insert_block name="origin" />
+      <parent link="${parent}"/>
+      <child link="${name}_link"/>
+    </joint>
+  </xacro:macro>
+
+</root>
